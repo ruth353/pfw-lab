@@ -88,7 +88,7 @@
                     </a>
                 </li>
                 <li class="nav-item  active ">
-                    <a href="{{ route('dashboard') }}" class="nav-link">
+                    <a href="{{ route('dashboard.index') }}" class="nav-link">
                         <span class="sidebar-icon">
                             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
@@ -118,6 +118,7 @@
                             </svg>
                         </span>
                         <span>Upgrade to Pro</span>
+                        
                     </a>
                 </li>
             </ul>
@@ -277,8 +278,7 @@
                     <p class="mb-0">Form untuk menambahkan data pelanggan baru.</p>
                 </div>
                 <div>
-                    <a href="" class="btn btn-primary"><i class="far fa-question-circle me-1"></i> Kembali</a>
-                </div>
+                    <a href="{{ route('dashboard.index') }}" class="btn btn-primary"><i class="far fa-question-circle me-1"></i> Kembali</a>
             </div>
         </div>
 
@@ -286,19 +286,20 @@
             <div class="col-12 mb-4">
                 <div class="card border-0 shadow components-section">
                     <div class="card-body">
-                        <form action="" method="POST">
+                        <form action="{{ route('pelanggan.store') }}" method="POST">
+                            @csrf
                             <div class="row mb-4">
                                 <div class="col-lg-4 col-sm-6">
                                     <!-- First Name -->
                                     <div class="mb-3">
                                         <label for="first_name" class="form-label">First name</label>
-                                        <input type="text" id="first_name" class="form-control" required>
+                                        <input type="text" id="first_name" class="form-control" name="first_name" required>
                                     </div>
 
                                     <!-- Last Name -->
                                     <div class="mb-3">
                                         <label for="last_name" class="form-label">Last name</label>
-                                        <input type="text" id="last_name" class="form-control" required>
+                                        <input type="text" id="last_name" class="form-control" name="last_name" required>
                                     </div>
                                 </div>
 
@@ -306,13 +307,13 @@
                                     <!-- Birthday -->
                                     <div class="mb-3">
                                         <label for="birthday" class="form-label">Birthday</label>
-                                        <input type="date" id="birthday" class="form-control">
+                                        <input type="date" id="birthday" class="form-control" name="birthday">
                                     </div>
 
                                     <!-- Gender -->
                                     <div class="mb-3">
                                         <label for="gender" class="form-label">Gender</label>
-                                        <select id="gender" name="gender" class="form-select">
+                                        <select id="gender" class="form-select">
                                             <option value="">-- Pilih --</option>
                                             <option value="Male">Male</option>
                                             <option value="Female">Female</option>
@@ -325,13 +326,13 @@
                                     <!-- Email -->
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email</label>
-                                        <input type="text" id="email" class="form-control" required>
+                                        <input type="text" id="email" name="email" class="form-control" required>
                                     </div>
 
                                     <!-- Phone -->
                                     <div class="mb-3">
                                         <label for="phone" class="form-label">Phone</label>
-                                        <input type="text" id="phone" class="form-control">
+                                        <input type="text" id="phone" name="phone" class="form-control">
                                     </div>
 
                                     <!-- Buttons -->
