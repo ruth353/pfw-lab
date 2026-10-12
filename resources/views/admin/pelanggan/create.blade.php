@@ -313,7 +313,7 @@
                                     <!-- Gender -->
                                     <div class="mb-3">
                                         <label for="gender" class="form-label">Gender</label>
-                                        <select id="gender" class="form-select">
+                                        <select id="gender" name="gender" class="form-select">
                                             <option value="">-- Pilih --</option>
                                             <option value="Male">Male</option>
                                             <option value="Female">Female</option>
