@@ -81,8 +81,11 @@ public function index(){
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
-    }
+public function destroy(string $id)
+{
+    $pelanggan = Pelanggan::findOrFail($id);
+
+    $pelanggan->delete();
+    return redirect()->route('pelanggan.index')->with('success','Data berhasil dihapus');
+}
 }
