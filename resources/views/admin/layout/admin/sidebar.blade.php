@@ -1,7 +1,7 @@
-    <nav class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-lg-none">
+<nav class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-lg-none">
         <a class="navbar-brand me-lg-5" href="../../index.html">
             <img class="navbar-brand-dark" src="{{ asset('assets-admin/img/brand/light.svg') }}" alt="Volt logo" /> <img
-                class="navbar-brand-light" src="{{ asset('') }}assets-admin/img/brand/dark.svg" alt="Volt logo" />
+                class="navbar-brand-light" src="{{ asset('assets-admin/img/brand/dark.svg') }}" alt="Volt logo" />
         </a>
         <div class="d-flex align-items-center">
             <button class="navbar-toggler d-lg-none collapsed" type="button" data-bs-toggle="collapse"
@@ -57,7 +57,7 @@
                         <span class="mt-1 ms-1 sidebar-text">Volt Overview</span>
                     </a>
                 </li>
-                <li class="nav-item  active ">
+                <li class="nav-item {{ request()->routeIs('dashboard.*') ? 'active' : '' }}">
                     <a href="{{ route('dashboard.index') }}" class="nav-link">
                         <span class="sidebar-icon">
                             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20"
@@ -69,9 +69,8 @@
                         <span class="sidebar-text">Dashboard</span>
                     </a>
                 </li>
-                <!-- Tambahkan blok kode ini -->
-                <li class="nav-item  active ">
-                    <a href="" class="nav-link">
+                <li class="nav-item {{ request()->routeIs('pelanggan.*') ? 'active' : '' }}">
+                    <a href="{{ route('pelanggan.index') }}" class="nav-link">
                         <span class="sidebar-icon">
                             <svg class="icon icon-xs me-2" data-slot="icon" fill="none" stroke-width="1.5"
                                 stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
@@ -82,6 +81,18 @@
                             </svg>
                         </span>
                         <span class="sidebar-text">Pelanggan</span>
+                    </a>
+                </li>
+
+                <!-- MENU USERS YANG BARU DITAMBAHKAN -->
+                <li class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                    <a href="{{ route('users.index') }}" class="nav-link">
+                        <span class="sidebar-icon">
+                            <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"></path>
+                            </svg>
+                        </span>
+                        <span class="sidebar-text">Users</span>
                     </a>
                 </li>
 
@@ -118,27 +129,3 @@
             </ul>
         </div>
     </nav>
-
-    <main class="content">
-
-        <nav class="navbar navbar-top navbar-expand navbar-dashboard navbar-dark ps-0 pe-2 pb-0">
-            <div class="container-fluid px-0">
-                <div class="d-flex justify-content-between w-100" id="navbarSupportedContent">
-                    <div class="d-flex align-items-center">
-                        <!-- Search form -->
-                        <form class="navbar-search form-inline" id="navbar-search-main">
-                            <div class="input-group input-group-merge search-bar">
-                                <span class="input-group-text" id="topbar-addon">
-                                    <svg class="icon icon-xs" x-description="Heroicon name: solid/search"
-                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                        aria-hidden="true">
-                                        <path fill-rule="evenodd"
-                                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                            clip-rule="evenodd"></path>
-                                    </svg>
-                                </span>
-                                <input type="text" class="form-control" id="topbarInputIconLeft" placeholder="Search"
-                                    aria-label="Search" aria-describedby="topbar-addon">
-                            </div>
-                        </form>
-                        <!-- / Search form -->

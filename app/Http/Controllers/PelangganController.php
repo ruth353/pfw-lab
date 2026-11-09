@@ -10,9 +10,22 @@ class PelangganController extends Controller
     /**
      * Display a listing of the resource.
      */
-public function index(){
-		$data['dataPelanggan'] = Pelanggan::all();
-		return view('admin.pelanggan.index',$data);
+    public function index(Request $request)
+{
+    try {
+        $filterableColumns = ['gender'];
+        $searchableColumns = ['first_name', 'last_name', 'email'];
+
+        $data['dataPelanggan'] = Pelanggan::filter($request, $filterableColumns)
+            ->search($request, $searchableColumns)
+            ->paginate(10)
+            ->withQueryString();
+    } catch (\Throwable $e) {
+        $data['dataPelanggan'] = [];
+        session()->flash('db_error', 'Koneksi ke database gagal');
+    }
+
+    return view('admin.pelanggan.index', $data);
 }
 
     /**
@@ -28,17 +41,29 @@ public function index(){
      */
     public function store(Request $request)
     {
-        //dd($request->all());
-        $data['first_name'] = $request->first_name;
-		$data['last_name'] = $request->last_name;
-		$data['birthday'] = $request->birthday;
-		$data['gender'] = $request->gender;
-		$data['email'] = $request->email;
-		$data['phone'] = $request->phone;
-		
-		Pelanggan::create($data);
-		
-		return redirect()->route('pelanggan.index')->with('success','Penambahan Data Berhasil!');
+        $request->validate([
+            'first_name' => 'required|string|max:100',
+            'last_name' => 'required|string|max:100',
+            'birthday' => 'nullable|date',
+            'gender' => 'nullable|in:Male,Female,Other',
+            'email' => 'required|email|unique:pelanggan,email',
+            'phone' => 'nullable|string|max:20',
+        ]);
+
+        try {
+            Pelanggan::create($request->only([
+                'first_name',
+                'last_name',
+                'birthday',
+                'gender',
+                'email',
+                'phone',
+            ]));
+
+            return redirect()->route('pelanggan.index')->with('success', 'Penambahan Data Berhasil!');
+        } catch (\Throwable $e) {
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -46,8 +71,7 @@ public function index(){
      */
     public function show(string $id)
     {
-    $data['dataPelanggan'] = Pelanggan::findOrFail($id);
-    return view('admin.pelanggan.edit', $data);
+        return $this->edit($id);
     }
 
     /**
@@ -55,7 +79,12 @@ public function index(){
      */
     public function edit(string $id)
     {
-        //
+        try {
+            $data['dataPelanggan'] = Pelanggan::findOrFail($id);
+            return view('admin.pelanggan.edit', $data);
+        } catch (\Throwable $e) {
+            return redirect()->route('pelanggan.index')->with('error', 'Data pelanggan tidak ditemukan atau database belum aktif.');
+        }
     }
 
     /**
@@ -63,29 +92,45 @@ public function index(){
      */
     public function update(Request $request, string $id)
     {
-    $pelanggan_id = $id;
-    $pelanggan = Pelanggan::findOrFail($pelanggan_id);
+        try {
+            $pelanggan = Pelanggan::findOrFail($id);
 
-    $pelanggan->first_name = $request->first_name;
-    $pelanggan->last_name = $request->last_name;
-    $pelanggan->birthday = $request->birthday;
-    $pelanggan->gender = $request->gender;
-    $pelanggan->email = $request->email;
-    $pelanggan->phone = $request->phone;
+            $request->validate([
+                'first_name' => 'required|string|max:100',
+                'last_name' => 'required|string|max:100',
+                'birthday' => 'nullable|date',
+                'gender' => 'nullable|in:Male,Female,Other',
+                'email' => 'required|email|unique:pelanggan,email,' . $id . ',pelanggan_id',
+                'phone' => 'nullable|string|max:20',
+            ]);
 
-    $pelanggan->save();
-    
-        return redirect()->route('pelanggan.index')->with('success', 'Perubahan Data Berhasil!');
+            $pelanggan->first_name = $request->first_name;
+            $pelanggan->last_name = $request->last_name;
+            $pelanggan->birthday = $request->birthday;
+            $pelanggan->gender = $request->gender;
+            $pelanggan->email = $request->email;
+            $pelanggan->phone = $request->phone;
+
+            $pelanggan->save();
+
+            return redirect()->route('pelanggan.index')->with('success', 'Perubahan Data Berhasil!');
+        } catch (\Throwable $e) {
+            return redirect()->back()->withInput()->with('error', 'Gagal mengubah data: ' . $e->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-public function destroy(string $id)
-{
-    $pelanggan = Pelanggan::findOrFail($id);
+    public function destroy(string $id)
+    {
+        try {
+            $pelanggan = Pelanggan::findOrFail($id);
+            $pelanggan->delete();
 
-    $pelanggan->delete();
-    return redirect()->route('pelanggan.index')->with('success','Data berhasil dihapus');
-}
+            return redirect()->route('pelanggan.index')->with('success', 'Data berhasil dihapus');
+        } catch (\Throwable $e) {
+            return redirect()->route('pelanggan.index')->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+        }
+    }
 }
