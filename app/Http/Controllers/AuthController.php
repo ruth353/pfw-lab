@@ -8,6 +8,10 @@ class AuthController extends Controller
 {
     public function index()
     {
+        if (Auth::check()) {
+            return redirect()->route('dashboard');
+        }
+
         return view('auth.login');
     }
 
@@ -21,7 +25,10 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('dashboard.index'))
+            // Data tambahan ini terpisah dari status autentikasi
+            session(['last_login' => now()]);
+
+            return redirect()->intended(route('dashboard'))
                 ->with('success', 'Login berhasil!');
         }
 
@@ -36,6 +43,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('success', 'Berhasil logout!');
+        return redirect()->route('login');
     }
 }

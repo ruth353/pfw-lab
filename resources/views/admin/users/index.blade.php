@@ -9,7 +9,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>#</th><th>Nama</th><th>Email</th><th>Aksi</th>
+                    <th>#</th><th>Nama</th><th>Email</th><th>Role</th><th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -18,6 +18,7 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
+                    <td>{{ $user->role }}</td>
                     <td>
                         <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-warning">Edit</a>
                         <form action="{{ route('users.destroy', $user) }}" method="POST" style="display:inline;">

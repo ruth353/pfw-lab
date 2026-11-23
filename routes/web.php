@@ -18,30 +18,26 @@ Route::get('/', function () {
     return redirect()->route('dashboard.index');
 });
 
-Route::get('/admin', [DashboardController::class, 'index'])->name('admin.index');
-Route::redirect('/admin/dashboard', '/dashboard');
-Route::redirect('/admin/pelanggan', '/pelanggan');
-Route::redirect('/admin/users', '/users');
+// ROUTE LOGIN (Guest only)
+Route::get('/login', [AuthController::class, 'index'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
+
+// ROUTE LOGOUT
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->middleware('auth')
+    ->name('auth.logout');
+
+// Guest routes (tidak perlu login)
+Route::get('/home', [HomeController::class, 'index']);
 
 Route::get('/mahasiswa/detail', [MahasiswaController::class, 'detail']);
 Route::get('/mahasiswa/profile', [MahasiswaController::class, 'profile']);
-
-Route::get('/home', [HomeController::class, 'index']);
 
 Route::post('question/store', [QuestionController::class, 'store'])
 		->name('question.store');
 
 Route::get('question', [QuestionController::class, 'index'])
 		->name('question.index');
-
-Route::get('/dashboard', [DashboardController::class, 'index'])
-		->name('dashboard.index');
-
-Route::resource('pelanggan', PelangganController::class);
-Route::resource('users', UserController::class);
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('users', UserController::class);
-});
 
 // Guest CRUD for categories (Eloquent), products (Query Builder), publishers (Eloquent), and books (Query Builder)
 Route::prefix('guest')->name('guest.')->group(function () {
@@ -59,14 +55,30 @@ Route::prefix('guest')->name('guest.')->group(function () {
     Route::resource('products', ProductController::class);
 });
 
+// Route yang memerlukan login
+Route::middleware(['auth'])->group(function () {
 
-// ROUTE LOGIN
-Route::get('/login', [AuthController::class, 'index'])->name('login');
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard.index');
 
-Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
+    Route::get('/admin', [DashboardController::class, 'index'])->name('admin.index');
+    Route::redirect('/admin/dashboard', '/dashboard')->name('dashboard');
+    Route::redirect('/admin/pelanggan', '/pelanggan');
+    Route::redirect('/admin/users', '/users');
 
-// ROUTE LOGOUT
-Route::post('/logout', [AuthController::class, 'logout'])
-    ->middleware('auth')
-    ->name('auth.logout');
+    // Hanya Super Admin yang dapat mengelola data user
+    Route::middleware(['checkrole:Super Admin'])->group(function () {
+        Route::resource('users', UserController::class);
+    });
 
+    // Super Admin dan Mitra dapat mengakses data pelanggan
+    Route::middleware(['checkrole:Super Admin,Mitra'])->group(function () {
+        Route::resource('pelanggan', PelangganController::class);
+    });
+
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::middleware(['checkrole:Super Admin'])->group(function () {
+            Route::resource('users', UserController::class);
+        });
+    });
+});
