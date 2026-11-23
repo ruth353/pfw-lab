@@ -43,7 +43,7 @@ class ProductController extends Controller
 
         DB::table('products')->insert($validated);
 
-        return redirect()->route('products.index')
+        return redirect()->route('guest.products.index')
             ->with('success', 'Product created successfully');
     }
 
@@ -70,7 +70,7 @@ class ProductController extends Controller
 
         DB::table('products')->where('id', $id)->update($validated);
 
-        return redirect()->route('products.index')
+        return redirect()->route('guest.products.index')
             ->with('success', 'Product updated successfully');
     }
 
@@ -80,7 +80,7 @@ class ProductController extends Controller
     public function destroy($id)
     {
         DB::table('products')->where('id', $id)->delete();
-        return redirect()->route('products.index')
+        return redirect()->route('guest.products.index')
             ->with('success', 'Product deleted');
     }
 }

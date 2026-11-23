@@ -105,7 +105,7 @@
                                 <span class="mb-0 font-small fw-bold text-gray-900">Bonnie Green</span>
                             </div>
                         </div>
-                    </a>
+                    </a>    
                     <div class="dropdown-menu dashboard-dropdown dropdown-menu-end mt-2 py-1">
                         <a class="dropdown-item d-flex align-items-center" href="#">
                             <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor"

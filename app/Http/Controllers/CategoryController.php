@@ -34,7 +34,7 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255',
         ]);
         Category::create($validated);
-        return redirect()->route('categories.index')
+        return redirect()->route('guest.categories.index')
             ->with('success', 'Category created successfully');
     }
 
@@ -55,7 +55,7 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255',
         ]);
         $category->update($validated);
-        return redirect()->route('categories.index')
+        return redirect()->route('guest.categories.index')
             ->with('success', 'Category updated successfully');
     }
 
@@ -65,7 +65,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return redirect()->route('categories.index')
+        return redirect()->route('guest.categories.index')
             ->with('success', 'Category deleted');
     }
 }

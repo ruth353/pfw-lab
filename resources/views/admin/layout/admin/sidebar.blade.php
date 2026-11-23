@@ -85,7 +85,7 @@
                 </li>
 
                 <!-- MENU USERS YANG BARU DITAMBAHKAN -->
-                <li class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                <li class="nav-item {{ request()->routeIs('users.*') || request()->routeIs('admin.users.*') ? 'active' : '' }}">
                     <a href="{{ route('users.index') }}" class="nav-link">
                         <span class="sidebar-icon">
                             <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
